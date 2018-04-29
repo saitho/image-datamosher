@@ -1,0 +1,70 @@
+package com.saitho;
+
+import java.io.*;
+import java.util.Random;
+
+/**
+ * Decoding datamoshes: http://axxim.net/ow/gol-guesser/dorado/
+ */
+public class ImageProcessor {
+    private int ignoreFirstPercentage = 10; // ignore first % bytes before making changes
+    private int ignoreLastPercentage = 10; // ignore last % bytes before making changes
+
+    private int startAt;
+    private int stopAt;
+    private int availableSize;
+
+    private String word;
+    private int currentWordIndex = 0;
+
+    private byte[] originalFileContent;
+
+    ImageProcessor(String fileName) throws IOException {
+        BufferedInputStream is = new BufferedInputStream(new FileInputStream(fileName));
+        originalFileContent = is.readAllBytes();
+
+        startAt = originalFileContent.length / 100 * ignoreFirstPercentage;
+        stopAt = originalFileContent.length/100 * (100-ignoreLastPercentage);
+        availableSize = originalFileContent.length/100 * (100 - ignoreFirstPercentage - ignoreLastPercentage);
+    }
+
+    private boolean hasNextChar() {
+        if (word == null) {
+            return false;
+        }
+        return currentWordIndex < word.length();
+    }
+
+    private char getNextChar() {
+        return word.charAt(currentWordIndex++);
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+        this.currentWordIndex = 0;
+    }
+
+    void process() throws IOException {
+        final String FILENAME_Save = "C:\\Users\\Lubenka\\Desktop\\WoW.jpg";
+
+        byte[] newContent = this.originalFileContent;
+
+        int putEvery = 0;
+        if (word != null) {
+            putEvery = availableSize / word.length();
+        }
+        int putNext = startAt;
+        for (int i = 0; i < newContent.length; i++) {
+            if (i >= stopAt || !(i == putNext) || !hasNextChar()) {
+                continue;
+            }
+            // modify character
+            newContent[i] = (byte) getNextChar();
+            putNext += putEvery;
+        }
+
+        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(FILENAME_Save));
+        out.write(newContent);
+        out.close();
+    }
+}
