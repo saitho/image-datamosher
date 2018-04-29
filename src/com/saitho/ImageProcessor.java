@@ -1,14 +1,13 @@
 package com.saitho;
 
 import java.io.*;
-import java.util.Random;
 
 /**
  * Decoding datamoshes: http://axxim.net/ow/gol-guesser/dorado/
  */
 public class ImageProcessor {
-    private int ignoreFirstPercentage = 10; // ignore first % bytes before making changes
-    private int ignoreLastPercentage = 10; // ignore last % bytes before making changes
+    private int ignoreFirstPercentage = 25; // ignore first % bytes before making changes
+    private int ignoreLastPercentage = 35; // ignore last % bytes before making changes
 
     private int startAt;
     private int stopAt;
@@ -18,10 +17,12 @@ public class ImageProcessor {
     private int currentWordIndex = 0;
 
     private byte[] originalFileContent;
+    private String outputFilePath;
 
-    ImageProcessor(String fileName) throws IOException {
-        BufferedInputStream is = new BufferedInputStream(new FileInputStream(fileName));
+    ImageProcessor(String inputFilePath, String outputFilePath) throws IOException {
+        BufferedInputStream is = new BufferedInputStream(new FileInputStream(inputFilePath));
         originalFileContent = is.readAllBytes();
+        this.outputFilePath = outputFilePath;
 
         startAt = originalFileContent.length / 100 * ignoreFirstPercentage;
         stopAt = originalFileContent.length/100 * (100-ignoreLastPercentage);
@@ -45,8 +46,6 @@ public class ImageProcessor {
     }
 
     void process() throws IOException {
-        final String FILENAME_Save = "C:\\Users\\Lubenka\\Desktop\\WoW.jpg";
-
         byte[] newContent = this.originalFileContent;
 
         int putEvery = 0;
@@ -63,7 +62,7 @@ public class ImageProcessor {
             putNext += putEvery;
         }
 
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(FILENAME_Save));
+        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(this.outputFilePath));
         out.write(newContent);
         out.close();
     }
