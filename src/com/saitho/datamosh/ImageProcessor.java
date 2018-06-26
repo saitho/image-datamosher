@@ -1,4 +1,4 @@
-package com.saitho;
+package com.saitho.datamosh;
 
 import java.io.*;
 
