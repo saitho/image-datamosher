@@ -3,9 +3,9 @@
 ## What is this?
 
 This tool was inspired by [Overwatch's Sombra ARG](https://wiki.gamedetectives.net/index.php?title=Sombra_ARG).
-There was an image which was datamoshed. Computing the difference of the datamoshed image and the original image revealed a text.
+There was an image which was datamoshed. By computing the difference between the original image and the datamoshed image one could reveal a hidden text.
 
-This tool enables you to create a datamoshed image using a source image and a text.
+This tool enables you to create a such a datamoshed image based on a source image and a text.
 
 ## How does it work?
 
